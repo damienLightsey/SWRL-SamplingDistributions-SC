@@ -2,7 +2,7 @@
 title: "Foundations for inference - Sampling distributions"
 output: 
     bookdown::html_document2
-author: "Your Name Goes Here"
+author: "Damien Lightsey"
 css: "lab.css"
 date: 'Last compiled: `r format(Sys.time(), "%B %d, %Y at %X")`'
 ---
@@ -83,7 +83,7 @@ ___________
 </ol>
 
 <div id="answer">
-Type your answer to Question 1 here and delete this sentence.
+B. 50 % of houses in Ames are smaller than 1499.69 is FALSE, 50% of the houses in Ames are smaller than `r comma(POP$pop_med)` square feet (the median)
 
 
 </div>
@@ -112,11 +112,23 @@ ________
 
 ```{r, label = "samp1-dist"}
 # Type your code for the Exercise  1 here, and Knit.
+hist <- ggplot(samp1, aes(x = area)) +
+  geom_histogram()
+hist
+SUMSTAT <- samp1 %>%
+  summarize(samp_mean = mean(area), samp_med = median(area), 
+            SD = sd(area), samp_iqr = IQR(area),
+            samp_min = min(area), samp_max = max(area),
+            samp_q1 = quantile(area, 0.25),  # first quartile, 25th percentile
+            samp_q3 = quantile(area, 0.75),  # third quartile, 75th percentile
+            G_1 = e1071::skewness(area))
+knitr::kable(POP, caption = "Population Parameters", col.names = c("$\\mu$", "$\\theta$", "$\\sigma$", "$\\text{IQR}$", "$\\text{MIN}$", "$\\text{MAX}$", "$\\text{Q}_1$", "$\\text{Q}_3$", "$\\text{G}_1$"))
+
 
 ```
 
 <div id="answer">
-Type your answer for **Exercise 1** here and delete this sentence.
+The distribution of the sample appears to be roughly the same, unimodal skewed right. It has a mean of `r (SUMSTAT$samp_mean)` $\text{ft}^2$ and a median of `r (SUMSTAT$samp_med)` $\text{ft}^2$.
 
 
 When reporting area be sure to report with proper units.  That is, $\text{ft}^2$.
@@ -144,7 +156,7 @@ _________
 </ol>
 
 <div id="answer">
-Type your answer for Question 2 here and delete this sentence.
+A sample of size 1000 will have the most accurate answer of the three choices.
 
 
 </div>
@@ -184,17 +196,19 @@ ___________________
 
 ```{r, label = "ANSques"}
 # Type your code for the Exercise 2 here, and Knit.
-
+meanxbar <- sample_means50 %>%
+  summarize(x_bar_bar = mean(x_bar))
+meanxbar
 ```
 
 ```{r label = "sampling-dist", fig.cap = "Sampling distribution of the sample mean ($\\bar{x}$)"}
 # Type your code for the Exercise 2 here, and Knit.
-
+ggplot(sample_means50, aes(x = x_bar)) +
+  geom_histogram()
 ```
 
 <div id="answer">
-Type your answer for **Exercise 2** here and delete this sentence.
-
+There are `r dim(sample_means50)[1]` rows in the table. The distribution lokos relatively normal with a mean of `r meanxbar`.
 
 </div>
 
